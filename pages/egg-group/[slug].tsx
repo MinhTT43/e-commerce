@@ -1,4 +1,5 @@
 import { GetStaticPaths, GetStaticProps } from "next";
+import Link from "next/link";
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const response = await fetch("https://pokeapi.co/api/v2/egg-group");
@@ -26,16 +27,16 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   };
 };
 
-const EggPlantPage = (data: any) => {
-  console.log(data);
+const EggGroupPage = (data: any) => {
   return (
     <>
+      <Link href="/">Homepage</Link>
       {data.data.map((pokemon: any, index: number) => {
         return (
           <div key={index}>
-            <a href={`http://localhost:3000/pokemon/${pokemon.name}`}>
-              {pokemon.name}
-            </a>
+            <Link href={`http://localhost:3000/pokemon/${pokemon.name}`}>
+              <a>{pokemon.name}</a>
+            </Link>
           </div>
         );
       })}
@@ -43,4 +44,4 @@ const EggPlantPage = (data: any) => {
   );
 };
 
-export default EggPlantPage;
+export default EggGroupPage;
