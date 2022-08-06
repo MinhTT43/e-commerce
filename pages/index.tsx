@@ -1,28 +1,27 @@
-import type { NextPage } from "next";
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
-type Pokemons = {
+type EggGroup = {
   name: string;
   url: string;
 };
 
 const Home = () => {
-  const test = async () => {
+  const [eggGroup, setEggGroup] = useState<EggGroup[]>();
+
+  const fetchEggGroups = async () => {
     const response = await fetch("https://pokeapi.co/api/v2/egg-group");
-    const data = await response.json();
-
-    const paths = data.results.map((eggPlant: any) => {
-      return {
-        params: { slug: eggPlant.name },
-      };
-    });
-
-    console.log(paths);
+    return response.json();
   };
 
-  test();
+  useEffect(() => {
+    const eggGroups = fetchEggGroups();
+    eggGroups.then((groups) => {
+      setEggGroup(groups.results);
+    });
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -36,7 +35,17 @@ const Home = () => {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>hello world</h1>
+        <section className="grid grid-cols-4 gap-4">
+          {eggGroup?.map((group: EggGroup, index: number) => {
+            return (
+              <div key={index}>
+                <Link href={`http://localhost:3000/egg-group/${group.name}`}>
+                  <a>{group.name}</a>
+                </Link>
+              </div>
+            );
+          })}
+        </section>
       </main>
 
       <footer className={styles.footer}></footer>
